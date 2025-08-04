@@ -1,9 +1,9 @@
-# web-atacker made in by mahyar-573
+# Web-Attacker made in by mahyar-573
 ....
 # **Web Attacker - Automated Web Penetration Testing Tool**  
 *(ابزار تست نفوذ خودکار وب)*  
 
-**🔗 GitHub Repository:** [https://github.com/YourUsername/Web-Attacker](https://github.com/YourUsername/Web-Attacker)  
+**🔗 GitHub Repository:** [https://github.com/YourUsername/Web-Attacker](https://github.com/mahyar-573/Web-Attacker)  
 
 ---
 
@@ -30,7 +30,7 @@ sudo apt update && sudo apt install nmap nikto hydra metasploit-framework sqlmap
 
 ### **2. Download & Run**  
 ```bash
-git clone https://github.com/YourUsername/Web-Attacker.git
+git clone https://github.com/mahyar-573/Web-Attacker.git
 cd Web-Attacker
 chmod +x web_attacker.sh
 ./web_attacker.sh
@@ -76,7 +76,7 @@ chmod +x web_attacker.sh
 
 ### **🚀 نصب و اجرا**  
 ```bash
-git clone https://github.com/YourUsername/Web-Attacker.git
+git clone https://github.com/mahyar-573/Web-Attacker.git
 cd Web-Attacker
 chmod +x web_attacker.sh
 ./web_attacker.sh
@@ -89,8 +89,8 @@ chmod +x web_attacker.sh
 ---
 
 **📌 برای مشارکت یا گزارش باگ:**  
-🔹 **GitHub Issues:** [https://github.com/YourUsername/Web-Attacker/issues](https://github.com/YourUsername/Web-Attacker/issues)  
-🔹 **Email:** your-email@example.com  
+🔹 **GitHub Issues:** [https://github.com/mahyar-573/Web-Attacker/issues](https://github.com/mahyar-573/Web-Attacker/issues)  
+🔹 **Email:** mahyarnasr5731@gmail.com 
 
 **🌟 اگر مفید بود، ستاره ⭐ فراموش نشود!**  
 
