@@ -3,7 +3,7 @@
 # **Web Attacker - Automated Web Penetration Testing Tool**  
 *(ابزار تست نفوذ خودکار وب)*  
 
-**🔗 GitHub Repository:** [https://github.com/YourUsername/Web-Attacker](https://github.com/mahyar-573/Web-Attacker)  
+**🔗 GitHub Repository:** [https://github.com/mahyar-573/Web-Attacker](https://github.com/mahyar-573/Web-Attacker)  
 
 ---
 
