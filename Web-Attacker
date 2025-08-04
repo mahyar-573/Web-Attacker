@@ -1,54 +1,125 @@
 #!/bin/bash
 
-# تنظیمات رنگ برای خروجی
+# ----------------------------------------------------------
+# پروژه: Web Attacker Pro
+# نسخه: 2.5
+# توسعه‌دهنده: [mahyar-573]
+# توضیحات: ابزار خودکار تست نفوذ وب و وردپرس
+# ----------------------------------------------------------
+
+# تنظیمات رنگ
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# دریافت اطلاعات هدف
-echo -e "${YELLOW}[*] Enter Target IP/Host:${NC} "
-read target
-echo -e "${YELLOW}[*] Enter Web Port (default 80):${NC} "
-read web_port
-web_port=${web_port:-80} # مقدار پیش‌فرض 80
+# نمایش هدر پروژه
+clear
+echo -e "${BLUE}"
+echo "----------------------------------------------------"
+echo "          _    _ _____ _   _ _______ _____  "
+echo "         | |  | |_   _| \ | |__   __|  __ \ "
+echo "         | |  | | | | |  \| |  | |  | |__) |"
+echo "         | |  | | | | | . \ |  | |  |  ___/ "
+echo "         | |__| |_| |_| |\  |  | |  | |     "
+echo "          \____/|_____|_| \_|  |_|  |_|     "
+echo "                   ${RED}PRO EDITION${BLUE}         "
+echo "----------------------------------------------------"
+echo -e "${NC}"
+echo -e "${GREEN}Web Attacker Pro - Automated Penetration Testing Suite${NC}"
+echo -e "${YELLOW}Version 2.5 | With WordPress & CMS Scanning${NC}"
+echo "----------------------------------------------------"
+echo -e "${GREEN}Welcome to Web Attacker Pro!${NC}"
+echo "A powerful automated penetration testing tool"
 
-# ایجاد پوشه برای نتایج
-report_dir="Pentest_Report_$(date +%Y%m%d_%H%M%S)"
-mkdir -p "$report_dir"
-echo -e "${GREEN}[+] Results will be saved in: $report_dir${NC}"
-
-# تابع برای اجرای دستورات و ذخیره خروجی
-run_test() {
-    echo -e "${YELLOW}[*] Running: $1${NC}"
-    eval "$2" > "$report_dir/$3"
-    echo -e "${GREEN}[+] Saved: $report_dir/$3${NC}"
+# تابع خوش‌آمدگویی
+welcome_message() {
+    echo -e "\n${BLUE}===================================================="
+    echo -e "               WELCOME TO WEB ATTACKER PRO"
+    echo -e "====================================================${NC}"
+    echo -e "${YELLOW}This tool is designed for authorized penetration testing only.${NC}"
+    echo -e "${RED}Unauthorized use is strictly prohibited!${NC}\n"
 }
 
-# 1. اسکن Nmap (پورت‌ها و سرویس‌ها)
-run_test "Nmap Scan" "nmap -sV -A -T4 -p- $target" "nmap_scan.txt"
-
-# 2. تست وب با Curl و Nikto
-if grep -q "$web_port/open" "$report_dir/nmap_scan.txt"; then
-    run_test "Curl HTTP Headers" "curl -I http://$target:$web_port" "curl_headers.txt"
-    run_test "Nikto Scan" "nikto -h http://$target:$web_port" "nikto_scan.txt"
+# تابع بررسی ابزارهای مورد نیاز
+check_dependencies() {
+    echo -e "${YELLOW}[*] Checking required tools...${NC}"
     
-    # 3. Bruteforce با Hydra (اگر SSH/POSTGRES/MYSQL باز بود)
-    if grep -q "22/open" "$report_dir/nmap_scan.txt"; then
-        run_test "Hydra SSH Attack" "hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://$target -t 4 -V" "hydra_ssh.txt"
+    declare -A tools=(
+        ["nmap"]="Port and service scanning"
+        ["nikto"]="Web vulnerability scanning"
+        ["hydra"]="Brute-force attacks"
+        ["msfconsole"]="Metasploit framework"
+        ["sqlmap"]="SQL injection testing"
+        ["curl"]="HTTP header analysis"
+        ["wpscan"]="WordPress scanning"
+        ["joomscan"]="Joomla scanning"
+    )
+    
+    missing=()
+    
+    for tool in "${!tools[@]}"; do
+        if ! command -v $tool &> /dev/null; then
+            missing+=("$tool")
+            echo -e "${RED}[!] Tool ${tool} not found (Purpose: ${tools[$tool]})${NC}"
+        fi
+    done
+    
+    if [ ${#missing[@]} -gt 0 ]; then
+        echo -e "${YELLOW}\n[*] Installing missing tools...${NC}"
+        sudo apt update
+        sudo apt install -y ${missing[@]}
+    else
+        echo -e "${GREEN}[✓] All required tools are installed${NC}"
     fi
-fi
+}
 
-# 4. تست Metasploit (بررسی آسیب‌پذیری‌های شناخته شده)
-run_test "Metasploit Vulnerability Scan" "msfconsole -q -x 'use auxiliary/scanner/http/http_version; set RHOSTS $target; set RPORT $web_port; run; exit'" "metasploit_scan.txt"
+# تابع اصلی اسکن
+start_scan() {
+    echo -e "\n${BLUE}[*] Starting penetration testing process${NC}"
+    
+    # ایجاد پوشه نتایج
+    report_dir="WebAttacker_Report_$(date +%Y%m%d_%H%M%S)"
+    mkdir -p "$report_dir"
+    echo -e "${GREEN}[+] Report directory created: ${report_dir}${NC}"
+    
+    # دریافت اطلاعات هدف
+    echo -e "\n${YELLOW}[?] Enter target information:${NC}"
+    read -p "Target URL/IP: " target
+    read -p "Web port (default 80): " web_port
+    web_port=${web_port:-80}
+    
+    # شروع تست‌ها
+    echo -e "\n${BLUE}[*] Running tests...${NC}"
+    
+    # 1. اسکن Nmap
+    echo -e "${YELLOW}[*] Running Nmap scan...${NC}"
+    nmap -sV -A -T4 -p- $target -oN "$report_dir/nmap_scan.txt"
+    
+    # 2. تست وردپرس (اگر پورت وب باز بود)
+    if grep -q "$web_port/open" "$report_dir/nmap_scan.txt"; then
+        echo -e "${YELLOW}[*] Scanning WordPress site...${NC}"
+        wpscan --url http://$target:$web_port --no-update -o "$report_dir/wpscan.txt"
+    fi
+    
+    # 3. تست SQL Injection
+    echo -e "${YELLOW}[*] Checking for SQL Injection...${NC}"
+    sqlmap -u "http://$target:$web_port" --batch --crawl=1 --output-dir="$report_dir/sqlmap"
+    
+    # 4. ذخیره نتایج
+    echo -e "\n${GREEN}[✓] Scan completed!${NC}"
+    echo -e "Results saved in ${report_dir} directory:"
+    ls -l "$report_dir"
+}
 
-# 5. تست SQL Injection (اگر پورت وب باز بود)
-if grep -q "$web_port/open" "$report_dir/nmap_scan.txt"; then
-    run_test "SQLMap Scan" "sqlmap -u 'http://$target:$web_port/login' --batch --crawl=1" "sqlmap_scan.txt"
-fi
+# اجرای توابع اصلی
+welcome_message
+check_dependencies
+start_scan
 
-# جمع‌بندی
-echo -e "${GREEN}\n[+] Penetration Test Completed!${NC}"
-echo -e "${YELLOW}=============================================${NC}"
-echo -e "${GREEN}نتایج در پوشه '$report_dir' ذخیره شد:${NC}"
-ls -l "$report_dir"
+# نمایش پیام پایانی
+echo -e "\n${BLUE}----------------------------------------------------"
+echo "Thank you for using Web Attacker Pro"
+echo "Developed by [mahyar-573] - Version 2.5"
+echo "----------------------------------------------------${NC}"
