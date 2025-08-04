@@ -33,7 +33,7 @@ sudo apt update && sudo apt install nmap nikto hydra metasploit-framework sqlmap
 git clone https://github.com/mahyar-573/Web-Attacker.git
 cd Web-Attacker
 chmod +x web_attacker.sh
-./web_attacker.sh
+./Web-Attacker.sh
 ```
 
 ### **3. Input**  
@@ -79,7 +79,7 @@ chmod +x web_attacker.sh
 git clone https://github.com/mahyar-573/Web-Attacker.git
 cd Web-Attacker
 chmod +x web_attacker.sh
-./web_attacker.sh
+./Web-Attacker.sh
 ```
 
 ### **📌 نکات مهم**  
